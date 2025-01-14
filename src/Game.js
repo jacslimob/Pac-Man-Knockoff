@@ -9,6 +9,10 @@ const tileMap = new TileMap(tileSize);
 const pacman = tileMap.getPacman(velocity);
 const enemies = tileMap.getEnemies(velocity);
 
+let lives = 3;
+const livesImage = new Image();
+livesImage.src = "../images/pac1.png";
+
 let gameOver = false;
 let gameWin = false;
 
@@ -20,8 +24,29 @@ function gameLoop() {
   drawGameEnd();
   pacman.draw(ctx, pause(), enemies);
   enemies.forEach((enemy) => enemy.draw(ctx, pause(), pacman));
+  drawScore();
+  drawLives();
   checkGameOver();
   checkGameWin();
+}
+
+function drawScore() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "white"; //#0095DD
+  ctx.fillText(`Score: ${tileMap.score}`, 32, tileSize * 1.25);
+}
+
+function drawLives() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "yellow";
+  ctx.fillText(`Lives:`, 32, tileSize * 26);
+
+  const x = 90;
+  const spacing = 32;
+
+  for (let i = 0; i < lives; i++) {
+    ctx.drawImage(livesImage, x + i * spacing, tileSize * 25.15);
+  }
 }
 
 function checkGameWin() {
@@ -54,32 +79,17 @@ function pause() {
 
 function drawGameEnd() {
   if (gameOver || gameWin) {
-    let text = "  You Win!";
+    let text = " You Win! ";
+    let color = "yellow";
     if (gameOver) {
-      text = " Game Over";
+      text = "Game Over!";
+      color = "red";
     }
 
-    // ctx.fillStyle = "black";
-    // ctx.fillRect(0, canvas.height / 3.2, canvas.clientWidth, 80);
+    ctx.font = "40px comic sans";
 
-    //draw border
-    ctx.strokeStyle = "yellow";
-    ctx.strokeRect(
-      canvas.width * 0.05,
-      canvas.height / 3.2,
-      canvas.width * 0.92,
-      80
-    );
-
-    ctx.font = "80px comic sans";
-    const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-    gradient.addColorStop("0", "gray"); //magenta
-    gradient.addColorStop("0.3", "blue"); //0.5, blue
-    gradient.addColorStop("0.5", "green"); //1.0, red
-    gradient.addColorStop("1.0", "aqua");
-
-    ctx.fillStyle = gradient;
-    ctx.fillText(text, 5, canvas.height / 2);
+    ctx.fillStyle = color;
+    ctx.fillText(text, tileSize * 8.5, tileSize * 16);
   }
 }
 

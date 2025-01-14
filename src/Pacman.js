@@ -193,13 +193,15 @@ export default class Pacman {
 
   #eatDot() {
     if (this.tileMap.eatDot(this.x, this.y) && this.madeFirstMove) {
-      //this.wakaSound.play();
+      this.wakaSound.volume = 0.2;
+      this.wakaSound.play();
     }
   }
 
   #eatPowerDot() {
     if (this.tileMap.eatPowerDot(this.x, this.y)) {
       // ghosts will become blue
+      this.powerDotSound.volume = 0.3;
       this.powerDotSound.play();
       this.powerDotActive = true;
       this.powerDotAboutToExpire = false;
@@ -227,6 +229,7 @@ export default class Pacman {
       collideEnemies.forEach((enemy) => {
         enemies.splice(enemies.indexOf(enemy), 1);
         this.eatGhostSound.play();
+        this.tileMap.score += 100;
       });
     }
   }
